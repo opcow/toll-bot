@@ -1,4 +1,4 @@
-module github.com/opcow/disc_twit
+module github.com/opcow/tol-bot
 
 go 1.14
 
