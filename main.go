@@ -154,31 +154,24 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if !isOp(m.Author.ID) {
 			return
 		}
-		if len(msg) > 1 {
-			u, err := s.User(msg[1])
-			if err == nil {
-				botOps[u.ID] = struct{}{}
-			} else {
-				s.ChannelMessageSend(m.ChannelID, "Invalid user ID.")
-			}
+		count := 0
+		users := idstoUsers(msg[1:])
+		if len(users) > 0 {
+			count += opUsers(users, false)
 		}
+		count += opUsers(m.Mentions, false)
+		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%d user%s added to operators.", count, addS(count)))
 	case "!deop":
 		if !isOp(m.Author.ID) {
 			return
 		}
-		if len(msg) > 1 {
-			if _, ok := botOps[msg[2]]; ok {
-				delete(botOps, msg[2])
-				u, err := s.User(msg[2])
-				if err != nil {
-					s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("User ID %s removed from operator list.", msg[2]))
-				} else {
-					s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("User %s removed from operator list.", u.Mention()))
-				}
-			} else {
-				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("User ID %s is not in the operator list.", msg[2]))
-			}
+		count := 0
+		users := idstoUsers(msg[1:])
+		if len(users) > 0 {
+			count += opUsers(users, true)
 		}
+		count += opUsers(m.Mentions, true)
+		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%d user%s removed from operators.", count, addS(count)))
 	case "!delmsg":
 		if len(msg) > 2 {
 			s.ChannelMessageDelete(msg[1], msg[2])
@@ -190,6 +183,39 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			sc <- os.Kill
 		}
 	}
+}
+
+func addS(n int) string {
+	if n != 1 {
+		return "s"
+	}
+	return ""
+}
+
+func idstoUsers(ids []string) []*discordgo.User {
+	var users []*discordgo.User
+	for _, id := range ids {
+		u, err := discord.User(id)
+		if err == nil {
+			users = append(users, u)
+		}
+	}
+	return users
+}
+func opUsers(users []*discordgo.User, deop bool) int {
+	count := 0
+	// users := m.Mentions
+	for _, u := range users {
+		_, ok := botOps[u.ID]
+		if ok && deop {
+			delete(botOps, u.ID)
+			count++
+		} else if !ok && !deop {
+			botOps[u.ID] = struct{}{}
+			count++
+		}
+	}
+	return count
 }
 
 func showConfig(id string) {
