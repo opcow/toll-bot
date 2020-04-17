@@ -4,7 +4,7 @@
 
 | Command  | Description  | Req. Op  |
 |---|---|---|
-| !cov  | report the latest stats  | no  |
+| !cov [country \| all]  | report the latest stats, defaults to 'usa'  | no  |
 | !reaper [channel id \| off] | periodically report the death toll to the channel given or currren channel  | yes  |
 | !op \<user id\> | add a user to the operators  | yes  |
 | !deop [user id] | remove a user/self from the operators  | yes  |
