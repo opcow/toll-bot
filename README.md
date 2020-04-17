@@ -6,8 +6,8 @@
 |---|---|---|
 | !cov [country \| all]  | report the latest stats, defaults to 'usa'  | no  |
 | !reaper [channel id \| off] | periodically report the death toll to the channel given or currren channel  | yes  |
-| !op \<user id\> | add a user to the operators  | yes  |
-| !deop [user id] | remove a user/self from the operators  | yes  |
+| !op \<userid\> \| \<@user\> | add one or more users to the operators  | yes  |
+| !deop \<userid\> \| \<@user\> | remove one or more users from the operators  | yes  |
 | !delmsg \<server id\> \<message id\> | delete a message  | no  |
 | !config | print the current config via direct message | yes  |
 | !quit  | kill the bot  | yes  |
