@@ -1,4 +1,4 @@
-module github.com/opcow/tol-bot
+module github.com/opcow/toll-bot
 
 go 1.14
 
