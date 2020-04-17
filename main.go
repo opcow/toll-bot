@@ -41,10 +41,9 @@ var (
 func getEnv() {
 	*dToken = os.Getenv("DISCORDTOKEN")
 	*rToken = os.Getenv("RAPIDAPITOKEN")
-	*cronSpec = os.Getenv("DTCRONSPEC")
-	*initialChans = os.Getenv("DTCHANS")
-	*operators = os.Getenv("DTOPS")
-	*passwd = os.Getenv("DTPASSWD")
+	*cronSpec = os.Getenv("TBCRONSPEC")
+	*initialChans = os.Getenv("TBCHANS")
+	*operators = os.Getenv("TBOPS")
 }
 
 func main() {
@@ -151,13 +150,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			delete(covChans, id)
 			s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Grim Reaper reports are *off* for %s.", chanIDtoMention(id)))
 		}
-	case "!chans":
-		if !isOp(m.Author.ID) {
-			return
-		}
-		for k := range covChans {
-			s.ChannelMessageSend(m.ChannelID, chanIDtoMention(k))
-		}
 	case "!op":
 		if !isOp(m.Author.ID) {
 			return
@@ -169,8 +161,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Invalid user ID.")
 			}
-		} else {
-			botOps[m.Message.Author.ID] = struct{}{}
 		}
 	case "!deop":
 		if !isOp(m.Author.ID) {
